@@ -4,8 +4,10 @@ import os
 from text_summarizer.functions import summarize
 
 
-try:
-    openai.api_key = os.getenv('OPENAI_KEY')
+try: 
+    with st.sidebar:
+        openai.api_key = st.text_input("OpenAI API Key", key="file_qa_api_key", type="password")
+        "[View the source code](https://github.com/el-grudge/text-summarizer)"
 
     # initialize a state variable
     if "summary" not in st.session_state:
@@ -18,10 +20,11 @@ try:
         input_text = st.text_area(label="Enter full text:", value="", height=250)
         col1, col2, col3 = st.columns(3)
         # model
+    
         with col1:
             model = st.selectbox(
                 'Select the model',
-                ('Ada', 'Babbage', 'Curie', 'Davinci'),
+                ('Babbage','Davinci','GPT 3.5'),
                 help='TBD'
             )
         # temperature
@@ -48,9 +51,8 @@ try:
 
     if submit_button:
         summarize(input_text, model, temperature, max_tokens)
-
-    # configure text area to populate with current state of summary
-    output_text = st.text_area(label="Summarized text:", value=st.session_state["summary"], height=250)
+        # configure text area to populate with current state of summary
+        output_text = st.text_area(label="Summarized text:", value=st.session_state["summary"], height=250)
 
 except:
     st.write('There was an error =(')
